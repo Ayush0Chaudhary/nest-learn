@@ -15,14 +15,17 @@ const teacher_service_1 = require("./teacher/teacher.service");
 const teacher_controller_1 = require("./teacher/teacher.controller");
 const teacher_module_1 = require("./teacher/teacher.module");
 const question_module_1 = require("./question/question.module");
+const auth_service_1 = require("./auth/auth.service");
+const auth_controller_1 = require("./auth/auth.controller");
+const auth_module_1 = require("./auth/auth.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [teacher_module_1.TeacherModule, question_module_1.QuestionModule],
-        controllers: [app_controller_1.AppController, teacher_controller_1.TeacherController],
-        providers: [app_service_1.AppService, prisma_service_1.PrismaService, teacher_service_1.TeacherService],
+        imports: [teacher_module_1.TeacherModule, question_module_1.QuestionModule, auth_module_1.AuthModule],
+        controllers: [app_controller_1.AppController, teacher_controller_1.TeacherController, auth_controller_1.AuthController],
+        providers: [app_service_1.AppService, prisma_service_1.PrismaService, teacher_service_1.TeacherService, auth_service_1.AuthService],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map
