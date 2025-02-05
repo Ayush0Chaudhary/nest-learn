@@ -11,8 +11,8 @@ export class TeacherController {
         return this.teacherService.getTeachers();
     }
 
-    @Post()
-    async createTeacher(@Body() teacher: TeacherDTO) {
-        return this.teacherService.createTeacher(teacher);
-    }
+    // @Post()
+    // async createTeacher(@Body() teacher: TeacherDTO) {
+    //     return this.teacherService.createTeacher(teacher);
+    // }
 }
