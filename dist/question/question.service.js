@@ -20,14 +20,6 @@ let QuestionService = class QuestionService {
         return this.prismaServices.questions.findMany();
     }
     async createQuestion(question) {
-        return this.prismaServices.questions.create({
-            data: {
-                title: question.title,
-                content: question.content,
-                authorId: question.authorId,
-                options: question.options
-            },
-        });
     }
     async getQuestionById(id) {
         return this.prismaServices.questions.findUnique({

@@ -14,24 +14,8 @@ export class AuthService {
     private teacherService: TeacherService
   ) { }
 
-  async getMe(id: number): Promise<any> {
-    const user = await this.prismaService.user.findUnique(
-      {
-        where: {
-          id: id
-        }
-      }
-    );
-    if (user) {
-      delete user.password;
-      return user;
-    } else {
-      return new UnauthorizedException();
-    }
-  }
-
   async validateUser(email: string, password: string): Promise<any> {
-    const user = await this.prismaService.user.findUnique(
+    const student = await this.prismaService.student.findUnique(
       {
         where: {
           email: email
@@ -39,12 +23,24 @@ export class AuthService {
       }
     )
 
-    if (user && this.verifyPassword(password, user.password)) {
-      const payload = { sub: user.id, email: user.email };
+    const teacher = await this.prismaService.teacher.findUnique({
+      where: {
+        email: email
+      }
+    })
+
+    if (student && this.verifyPassword(password, student.password)) {
+      const payload = { sub: student.id, email: student.email };
       return {
         access_token: await this.jwtService.signAsync(payload),
       };
-    } else {
+    } else if (teacher && this.verifyPassword(password, teacher.password)) {
+      const payload = { sub: teacher.id, email: teacher.email };
+      return {
+        access_token: await this.jwtService.signAsync(payload),
+      };
+    }
+    else {
       return new UnauthorizedException();
     }
   }
@@ -53,35 +49,42 @@ export class AuthService {
     if (!email || !password || !name) {
       return new UnauthorizedException();
     }
-    const user = await this.prismaService.user.findUnique({
+    const user = await this.prismaService.student.findUnique({
       where: {
         email: email
       }
     });
-    if (user) {
+
+    const teacher = await this.prismaService.teacher.findUnique({
+      where: {
+        email: email
+      }
+    });
+
+    if (user || teacher) {
       return new UnauthorizedException();
     } else {
       const hash = await this.encryptPassword(password);
-      const newUser = await this.prismaService.user.create({
-        data: {
-          email: email,
-          password: hash,
-          name: name,
-          type: type,
-        },
-      });
-      if (newUser) {
+
+      var payload;
         if (type == 'teacher') {
-          const teacher: TeacherDTO = {
-            email: newUser.email,
-            id: newUser.id,
-            name: newUser.name,
-            posts: []
-          }
-          this.teacherService.createTeacher(teacher);
+          const teacher = await this.prismaService.teacher.create({
+            data: {
+              email: email,
+              password: hash
+            }
+          });
+          payload = { sub: teacher.id, email: teacher.email };
+        } else if (type == "student") {
+          const student = await this.prismaService.student.create({
+            data: {
+              email: email,
+              password: hash
+            }
+          });
+          payload = { sub: student.id, email: student.email };
         }
-      }
-      const payload = { sub: newUser.id, email: newUser.email };
+        
       return {
         access_token: await this.jwtService.signAsync(payload),
       };

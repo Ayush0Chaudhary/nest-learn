@@ -1,4 +1,3 @@
-import { TeacherDTO } from 'src/dto/teacher';
 import { PrismaService } from 'src/prisma/prisma.service';
 export declare class TeacherService {
     private prismaServices;
@@ -6,11 +5,6 @@ export declare class TeacherService {
     getTeachers(): Promise<{
         id: number;
         email: string;
-        name: string | null;
+        password: string;
     }[]>;
-    createTeacher(teacher: TeacherDTO): Promise<{
-        id: number;
-        email: string;
-        name: string | null;
-    }>;
 }

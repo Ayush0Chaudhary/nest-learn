@@ -14,33 +14,32 @@ const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
 const prisma_service_1 = require("../prisma/prisma.service");
 const bcrypt = require("bcrypt");
+const teacher_service_1 = require("../teacher/teacher.service");
 let AuthService = class AuthService {
-    constructor(prismaService, jwtService) {
+    constructor(prismaService, jwtService, teacherService) {
         this.prismaService = prismaService;
         this.jwtService = jwtService;
-    }
-    async getMe(id) {
-        const user = await this.prismaService.user.findUnique({
-            where: {
-                id: id
-            }
-        });
-        if (user) {
-            delete user.password;
-            return user;
-        }
-        else {
-            return new common_1.UnauthorizedException();
-        }
+        this.teacherService = teacherService;
     }
     async validateUser(email, password) {
-        const user = await this.prismaService.user.findUnique({
+        const student = await this.prismaService.student.findUnique({
             where: {
                 email: email
             }
         });
-        if (user && this.verifyPassword(password, user.password)) {
-            const payload = { sub: user.id, email: user.email };
+        const teacher = await this.prismaService.teacher.findUnique({
+            where: {
+                email: email
+            }
+        });
+        if (student && this.verifyPassword(password, student.password)) {
+            const payload = { sub: student.id, email: student.email };
+            return {
+                access_token: await this.jwtService.signAsync(payload),
+            };
+        }
+        else if (teacher && this.verifyPassword(password, teacher.password)) {
+            const payload = { sub: teacher.id, email: teacher.email };
             return {
                 access_token: await this.jwtService.signAsync(payload),
             };
@@ -53,25 +52,40 @@ let AuthService = class AuthService {
         if (!email || !password || !name) {
             return new common_1.UnauthorizedException();
         }
-        const user = await this.prismaService.user.findUnique({
+        const user = await this.prismaService.student.findUnique({
             where: {
                 email: email
             }
         });
-        if (user) {
+        const teacher = await this.prismaService.teacher.findUnique({
+            where: {
+                email: email
+            }
+        });
+        if (user || teacher) {
             return new common_1.UnauthorizedException();
         }
         else {
             const hash = await this.encryptPassword(password);
-            const newUser = await this.prismaService.user.create({
-                data: {
-                    email: email,
-                    password: hash,
-                    name: name,
-                    type: type,
-                },
-            });
-            const payload = { sub: newUser.id, email: newUser.email };
+            var payload;
+            if (type == 'teacher') {
+                const teacher = await this.prismaService.teacher.create({
+                    data: {
+                        email: email,
+                        password: hash
+                    }
+                });
+                payload = { sub: teacher.id, email: teacher.email };
+            }
+            else if (type == "student") {
+                const student = await this.prismaService.student.create({
+                    data: {
+                        email: email,
+                        password: hash
+                    }
+                });
+                payload = { sub: student.id, email: student.email };
+            }
             return {
                 access_token: await this.jwtService.signAsync(payload),
             };
@@ -101,6 +115,7 @@ exports.AuthService = AuthService;
 exports.AuthService = AuthService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [prisma_service_1.PrismaService,
-        jwt_1.JwtService])
+        jwt_1.JwtService,
+        teacher_service_1.TeacherService])
 ], AuthService);
 //# sourceMappingURL=auth.service.js.map

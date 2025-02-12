@@ -18,6 +18,7 @@ exports.TeacherModule = TeacherModule = __decorate([
     (0, common_1.Module)({
         controllers: [teacher_controller_1.TeacherController],
         providers: [teacher_service_1.TeacherService, prisma_service_1.PrismaService],
+        exports: [teacher_service_1.TeacherService]
     })
 ], TeacherModule);
 //# sourceMappingURL=teacher.module.js.map

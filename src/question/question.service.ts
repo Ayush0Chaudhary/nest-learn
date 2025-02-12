@@ -14,14 +14,7 @@ export class QuestionService {
 
     async createQuestion(question: QuestionsDTO) {
 
-        return this.prismaServices.questions.create({
-            data: {
-                title: question.title,
-                content: question.content,
-                authorId: question.authorId,
-                options: question.options
-            },
-        });
+
 
     }
 

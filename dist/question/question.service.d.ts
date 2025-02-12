@@ -5,23 +5,13 @@ export declare class QuestionService {
     constructor(prismaServices: PrismaService);
     getQuestions(): Promise<{
         id: number;
-        title: string;
-        content: string | null;
-        authorId: number | null;
-        options: string;
+        text: string;
+        testid: number;
     }[]>;
-    createQuestion(question: QuestionsDTO): Promise<{
-        id: number;
-        title: string;
-        content: string | null;
-        authorId: number | null;
-        options: string;
-    }>;
+    createQuestion(question: QuestionsDTO): Promise<void>;
     getQuestionById(id: number): Promise<{
         id: number;
-        title: string;
-        content: string | null;
-        authorId: number | null;
-        options: string;
+        text: string;
+        testid: number;
     }>;
 }

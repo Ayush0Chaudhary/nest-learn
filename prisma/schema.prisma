@@ -14,25 +14,42 @@ datasource db {
 }
 
 model Teacher {
-  id    Int         @id @default(autoincrement())
-  email String      @unique
-  name  String?
-  posts Questions[]
+  id    Int    @id @default(autoincrement())
+  email String @unique
+  tests Test[]
+  password String
+}
+
+model Test {
+  id        Int             @id @default(autoincrement())
+  question  Questions[]
+  teacher   Teacher?        @relation(fields: [teacherId], references: [id])
+  teacherId Int?
+  student   TestonStudent[]
 }
 
 model Questions {
-  id       Int      @id @default(autoincrement())
-  title    String
-  content  String?
-  author   Teacher? @relation(fields: [authorId], references: [id])
-  authorId Int?
-  options  String
+  id     Int    @id @default(autoincrement())
+  text   String
+  test   Test  @relation(fields: [testid], references: [id])
+  testid Int
 }
 
-model User {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
+model Student {
+  id    Int             @id @default(autoincrement())
+  email String          @unique
+  tests TestonStudent[]
   password String
-  name     String
-  type     String
+}
+
+model TestonStudent {
+  student   Student @relation(fields: [studentId], references: [id])
+  studentId Int
+
+  test   Test @relation(fields: [testid], references: [id])
+  testid Int
+
+  assignedAt DateTime @default(now())
+
+  @@id([studentId, testid])
 }

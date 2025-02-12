@@ -13,6 +13,8 @@ const auth_service_1 = require("./auth.service");
 const prisma_service_1 = require("../prisma/prisma.service");
 const jwt_1 = require("@nestjs/jwt");
 const constant_1 = require("./constant");
+const teacher_module_1 = require("../teacher/teacher.module");
+const student_module_1 = require("../student/student.module");
 let AuthModule = class AuthModule {
 };
 exports.AuthModule = AuthModule;
@@ -24,6 +26,7 @@ exports.AuthModule = AuthModule = __decorate([
                 secret: constant_1.jwtConstants.secret,
                 signOptions: { expiresIn: '6000s' },
             }),
+            teacher_module_1.TeacherModule, student_module_1.StudentModule
         ],
         controllers: [auth_controller_1.AuthController],
         providers: [auth_service_1.AuthService, prisma_service_1.PrismaService]

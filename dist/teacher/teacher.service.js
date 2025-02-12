@@ -19,14 +19,6 @@ let TeacherService = class TeacherService {
     async getTeachers() {
         return this.prismaServices.teacher.findMany();
     }
-    async createTeacher(teacher) {
-        return this.prismaServices.teacher.create({
-            data: {
-                name: teacher.name,
-                email: teacher.email
-            },
-        });
-    }
 };
 exports.TeacherService = TeacherService;
 exports.TeacherService = TeacherService = __decorate([

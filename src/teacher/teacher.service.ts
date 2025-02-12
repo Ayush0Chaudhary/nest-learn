@@ -10,12 +10,12 @@ export class TeacherService {
         return this.prismaServices.teacher.findMany();
     }
 
-    async createTeacher(teacher: TeacherDTO) {
-        return this.prismaServices.teacher.create({
-            data: {
-                name: teacher.name,
-                email: teacher.email
-            },
-        });
-   }          
+//     async createTeacher(teacher: TeacherDTO) {
+//         return this.prismaServices.teacher.create({
+//             data: {
+//                 name: teacher.name,
+//                 email: teacher.email
+//             },
+//         });
+//    }          
 }
