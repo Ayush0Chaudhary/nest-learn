@@ -29,9 +29,6 @@ let AuthController = class AuthController {
     async status(req) {
         return { status: 'ok', username: req['user'].username };
     }
-    async me(req) {
-        return this.authService.getMe(req['user'].username);
-    }
 };
 exports.AuthController = AuthController;
 __decorate([
@@ -57,14 +54,6 @@ __decorate([
     __metadata("design:paramtypes", [Request]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "status", null);
-__decorate([
-    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
-    (0, common_1.Get)('profile'),
-    __param(0, (0, common_1.Req)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Request]),
-    __metadata("design:returntype", Promise)
-], AuthController.prototype, "me", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)('api/v1/auth'),
     __metadata("design:paramtypes", [auth_service_1.AuthService])

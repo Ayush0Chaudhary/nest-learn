@@ -1,7 +1,8 @@
-import { Body, Controller, Get, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { TestService } from './test.service';
 import { AddQuestiontoTestDto, CreateTestDto } from 'src/dto/create-test.dto';
-import { QuestionController } from 'src/question/question.controller';
+import { Express } from 'express';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('api/v1/test')
 export class TestController {
@@ -21,5 +22,10 @@ export class TestController {
         return this.testService.addQuestiontoTest(addQuestiontoTestDto.question, addQuestiontoTestDto.testId);
     }
 
-    
+    @Post('upload')
+    @UseInterceptors(FileInterceptor('file'))
+    uploadFile(@UploadedFile() file: Express.Multer.File) {
+      console.log(file);
+      // TODO: Save file to disk 
+    }
 }

@@ -8,5 +8,4 @@ export declare class AuthController {
         status: string;
         username: any;
     }>;
-    me(req: Request): Promise<any>;
 }

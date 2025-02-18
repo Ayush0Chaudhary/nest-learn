@@ -15,4 +15,5 @@ export declare class TestController {
         id: number;
         teacherId: number | null;
     }>;
+    uploadFile(file: Express.Multer.File): void;
 }

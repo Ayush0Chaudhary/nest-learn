@@ -23,9 +23,9 @@ export class AuthController {
       return { status: 'ok', username: req['user'].username };
     }
   
-    @UseGuards(AuthGuard)
-    @Get('profile')
-    async me(@Req() req: Request) {
-      return this.authService.getMe(req['user'].username);
-    }
+    // @UseGuards(AuthGuard)
+    // @Get('profile')
+    // async me(@Req() req: Request) {
+    //   return this.authService.getMe(req['user'].username);
+    // }
 }
